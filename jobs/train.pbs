@@ -1,0 +1,47 @@
+#!/bin/bash
+#PBS -N toy-cnn-train
+#PBS -q umagpu
+#PBS -m abe
+#PBS -l walltime=00:30:00
+#PBS -e outputs/toy-cnn/err.log
+#PBS -o outputs/toy-cnn/out.log
+
+set -e
+set -u
+
+echo "=========================================="
+echo "=== PBS job started ======================"
+echo "Job ID:        $PBS_JOBID"
+echo "Queue:         $PBS_QUEUE"
+echo "Node:          $(hostname)"
+echo "Workdir:       $PBS_O_WORKDIR"
+echo "Date:          $(date)"
+echo "=========================================="
+echo
+
+cd "$PBS_O_WORKDIR"
+
+mkdir -p outputs/toy-cnn
+mkdir -p /work/username/cenapad-mlpt/toy-cnn
+
+echo "=== GPU visibility check ==="
+nvidia-smi
+echo
+
+echo "CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES:-not set}"
+echo
+
+echo "=== Starting training ==="
+echo
+
+uv run --offline scripts/train.py \
+    --config configs/toy.yaml \
+    --output-path /work/username/cenapad-mlpt/toy-cnn
+
+cp /work/username/cenapad-mlpt/toy-cnn/* outputs/toy-cnn/
+
+echo
+echo "=========================================="
+echo "=== PBS job finished ====================="
+echo "Date: $(date)"
+echo "=========================================="

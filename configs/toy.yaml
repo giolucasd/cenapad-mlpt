@@ -1,0 +1,25 @@
+global:
+  seed: 27
+  model_name: simple_cnn
+
+execution:
+  batch_size: 128
+  num_workers: 4
+
+dataset:
+  data_root: /path/to/data
+
+pipeline:
+  resolution: 28
+
+model:
+  in_channels: 1
+  num_classes: 10
+
+optimizer:
+  lr: 0.001
+  weight_decay: 0.0001
+
+training:
+  max_epochs: 3
+  resume_from: null
